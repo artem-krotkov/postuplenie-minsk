@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Экономика в вузах Минска</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&family=PT+Serif:wght@400;700&display=swap">
+<style>
+/* Ведомость приёмной комиссии: светлая «бумага», чернильно-синий акцент, таблица слева, карточка специальности справа */
+:root {
+  --bg: #f6f7f4; --panel: #ffffff; --fg: #1d2330; --muted: #5d6573; --line: #dfe2dc; --soft: #eef0ea;
+  --accent: #2b4c9b; --accent-soft: #e3e9f7; --paid: #b5651d;
+  --ok: #1f7a4a; --ok-bg: #e2f2e8; --warn: #9a6a00; --warn-bg: #fbf0d4; --bad: #a33a3a; --bad-bg: #f7e1e1;
+  --font-display: "PT Serif", Georgia, "Times New Roman", serif;
+  --font-body: "PT Sans", "Segoe UI", Roboto, Arial, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14171d; --panel: #1b2029; --fg: #e6e8ec; --muted: #9aa2b0; --line: #2c333f; --soft: #222833;
+    --accent: #8fa9ec; --accent-soft: #263457; --paid: #e0a060;
+    --ok: #6fcf97; --ok-bg: #1d3528; --warn: #e6bd5a; --warn-bg: #3a3020; --bad: #ef8a8a; --bad-bg: #3d2224;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14171d; --panel: #1b2029; --fg: #e6e8ec; --muted: #9aa2b0; --line: #2c333f; --soft: #222833;
+  --accent: #8fa9ec; --accent-soft: #263457; --paid: #e0a060;
+  --ok: #6fcf97; --ok-bg: #1d3528; --warn: #e6bd5a; --warn-bg: #3a3020; --bad: #ef8a8a; --bad-bg: #3d2224;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.5 var(--font-body);
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.wrap {
+  max-width: 1320px; margin-inline: auto; padding-block: 28px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 22px;
+}
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; text-wrap: balance; margin: 0; line-height: 1.2; }
+h1 { font-size: clamp(1.7rem, 4vw, 2.5rem); }
+h2 { font-size: 1.25rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+.num { font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+.small { font-size: .875rem; }
+
+header { display: grid; gap: 10px; max-width: 75ch; }
+.eyebrow { font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+.must {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 12px;
+}
+.must > div { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; display: grid; gap: 4px; }
+.must .label { font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.must .big { font-family: var(--font-display); font-size: 1.15rem; }
+.must .key { border-color: var(--accent); background: var(--accent-soft); }
+
+.controls { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: end; }
+.field { display: grid; gap: 4px; min-width: 0; }
+.field label, .field .lbl { font-size: .8rem; color: var(--muted); }
+input[type="search"], input[type="number"], select {
+  font: inherit; font-size: .95rem; color: var(--fg); background: var(--panel); border: 1px solid var(--line);
+  border-radius: 6px; padding: 7px 10px; min-width: 0;
+}
+input[type="number"] { width: 7.5em; }
+input[type="search"] { width: min(260px, 100%); }
+input:focus-visible, select:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  font: inherit; font-size: .88rem; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--panel); color: var(--fg); cursor: pointer;
+}
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.check { display: flex; gap: 6px; align-items: center; font-size: .92rem; padding-bottom: 6px; }
+
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 400px); gap: 22px; align-items: start; }
+@media (max-width: 960px) { .layout { grid-template-columns: minmax(0, 1fr); } .detail { order: -1; } }
+
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0; }
+.tablebox { overflow: auto; max-height: 78vh; border-top: 1px solid var(--line); margin-top: 10px; }
+table { border-collapse: collapse; width: 100%; font-size: .92rem; }
+th, td { padding: 7px 8px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+th { position: sticky; top: 0; background: var(--panel); z-index: 1; font-weight: 700; font-size: .8rem; color: var(--muted); white-space: nowrap; }
+th button { all: unset; cursor: pointer; display: inline-flex; gap: 4px; align-items: center; }
+th button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+th[aria-sort="ascending"] button::after { content: "▲"; font-size: .7em; }
+th[aria-sort="descending"] button::after { content: "▼"; font-size: .7em; }
+th.grp-b { color: var(--accent); }
+th.grp-p { color: var(--paid); }
+td.r, th.r { text-align: right; }
+tbody tr { cursor: pointer; }
+tbody tr:hover { background: var(--soft); }
+tbody tr.sel { background: var(--accent-soft); }
+td.spec { min-width: 220px; }
+td.spec .uni { font-weight: 700; }
+td.spec .grp { font-size: .78rem; color: var(--muted); }
+td.spec .pill { margin-top: 4px; }
+.score { display: grid; gap: 3px; justify-items: end; }
+.bar { width: 56px; height: 4px; background: var(--soft); border-radius: 2px; overflow: hidden; }
+.bar i { display: block; height: 100%; border-radius: 2px; }
+.yr { font-size: .72rem; color: var(--muted); margin-left: 3px; }
+.delta-up { color: var(--bad); }
+.delta-down { color: var(--ok); }
+.pill { display: inline-block; font-size: .75rem; padding: 1px 7px; border-radius: 999px; white-space: nowrap; }
+.pill.ok { background: var(--ok-bg); color: var(--ok); }
+.pill.warn { background: var(--warn-bg); color: var(--warn); }
+.pill.bad { background: var(--bad-bg); color: var(--bad); }
+.empty { padding: 24px 8px; color: var(--muted); }
+@media (max-width: 640px) { .hide-sm { display: none; } td.spec { min-width: 170px; } }
+
+.detail { position: sticky; top: 12px; display: grid; gap: 14px; }
+@media (max-width: 960px) { .detail { position: static; } }
+.detail .head { display: grid; gap: 4px; }
+.facts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.fact { background: var(--soft); border-radius: 8px; padding: 8px 10px; display: grid; gap: 2px; }
+.fact .label { font-size: .75rem; color: var(--muted); }
+.fact .val { font-family: var(--font-display); font-size: 1.3rem; }
+.fact.b .val { color: var(--accent); }
+.fact.p .val { color: var(--paid); }
+.legend { display: flex; gap: 14px; font-size: .82rem; color: var(--muted); flex-wrap: wrap; }
+.legend span::before { content: ""; display: inline-block; width: 14px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: middle; background: currentColor; }
+.legend .lb { color: var(--accent); }
+.legend .lp { color: var(--paid); }
+#chart { width: 100%; min-height: 230px; }
+#chart svg { display: block; width: 100%; }
+.yourscore { font-size: .9rem; }
+
+.notes { display: grid; gap: 14px; max-width: 90ch; }
+.notes ul { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+footer { font-size: .85rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Поступление 2027 · данные на 28.10.2026</div>
+    <h1>Экономика в вузах Минска</h1>
+    <p class="muted">Очная форма, бюджет и платно: <b class="num" id="nSpec">—</b> специальностей в <b class="num" id="nUni">—</b> вузах. План приёма 2026 года, проходные баллы 2021-2026, стоимость обучения. Нажмите на строку, чтобы увидеть динамику баллов.</p>
+  </header>
+
+  <section class="must" aria-label="Что сдавать">
+    <div class="key">
+      <span class="label">Что сдавать на все эти специальности</span>
+      <span class="big">Русский или белорусский язык + математика + иностранный язык</span>
+    </div>
+    <div>
+      <span class="label">История Беларуси</span>
+      <span>На экономические специальности не засчитывается. Нужны математика и иностранный язык.</span>
+    </div>
+    <div>
+      <span class="label">Как считается балл</span>
+      <span>3 сертификата по 100 баллов + средний балл аттестата × 10. Максимум 400.</span>
+    </div>
+  </section>
+
+  <section class="controls" aria-label="Фильтры">
+    <div class="field">
+      <span class="lbl">Направление</span>
+      <div class="chips" id="groups"></div>
+    </div>
+    <div class="field">
+      <label for="uni">Вуз</label>
+      <select id="uni"><option value="">Все вузы</option></select>
+    </div>
+    <div class="field">
+      <label for="q">Поиск</label>
+      <input id="q" type="search" placeholder="маркетинг, финансы, БГЭУ…">
+    </div>
+    <div class="field">
+      <label for="my">Мой ожидаемый балл</label>
+      <input id="my" type="number" min="0" max="400" step="1" placeholder="напр. 320">
+    </div>
+    <label class="check"><input id="budgetOnly" type="checkbox"> Только с бюджетными местами</label>
+  </section>
+
+  <div class="layout">
+    <section class="card" aria-labelledby="tblTitle">
+      <h2 id="tblTitle">Специальности</h2>
+      <p class="muted small">Балл - последний проходной (2026; с пометкой «25» - 2025, если 2026 ещё не опубликован). Δ - изменение к 2025 году: красным рост, зелёным снижение. <span id="countShown"></span></p>
+      <div class="tablebox">
+        <table>
+          <thead>
+            <tr>
+              <th data-sort="spec"><button type="button">Вуз и специальность</button></th>
+              <th class="r grp-b" data-sort="places_budget"><button type="button">Бюджет, мест</button></th>
+              <th class="r grp-b" data-sort="b_last"><button type="button">Бюджет, балл</button></th>
+              <th class="r grp-b hide-sm" data-sort="b_change"><button type="button">Δ</button></th>
+              <th class="r grp-p" data-sort="places_paid"><button type="button">Платно, мест</button></th>
+              <th class="r grp-p" data-sort="p_last"><button type="button">Платно, балл</button></th>
+              <th class="r grp-p hide-sm" data-sort="p_change"><button type="button">Δ</button></th>
+              <th class="r" data-sort="price"><button type="button">Цена, BYN/год</button></th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+        <p class="empty" id="empty" hidden>Ничего не найдено. Измените фильтры или поиск.</p>
+      </div>
+    </section>
+
+    <aside class="card detail" aria-live="polite">
+      <div class="head">
+        <span class="eyebrow" id="dGroup"></span>
+        <h2 id="dTitle">Выберите специальность</h2>
+        <span class="muted small" id="dFac"></span>
+      </div>
+      <div class="facts">
+        <div class="fact b"><span class="label">Бюджет 2026, мест</span><span class="val num" id="dPb">—</span></div>
+        <div class="fact p"><span class="label">Платно 2026, мест</span><span class="val num" id="dPp">—</span></div>
+        <div class="fact"><span class="label">Цена платного, BYN/год</span><span class="val num" id="dPrice">—</span></div>
+        <div class="fact"><span class="label">Конкурс 2026, чел./место</span><span class="val num" id="dContest">—</span></div>
+      </div>
+      <div class="yourscore" id="dMy" hidden></div>
+      <div>
+        <h3 class="small" style="font-family:var(--font-body);font-size:.9rem;margin-bottom:6px">Проходной балл по годам</h3>
+        <div class="legend"><span class="lb">Бюджет</span><span class="lp">Платно</span></div>
+        <div id="chart"></div>
+      </div>
+      <p class="muted small" id="dNote"></p>
+    </aside>
+  </div>
+
+  <section class="notes card">
+    <h2>Что важно знать</h2>
+    <ul>
+      <li>На «Таможенное дело» и «Международную логистику» первым профильным предметом идёт иностранный язык, вторым математика. Набор предметов тот же.</li>
+      <li>Отбор: только Минск, дневная форма, полный срок. Заочное, сокращённый срок, военные и целевые места не включены.</li>
+      <li>Места 2026 - план приёма. У БГЭУ «Экономика и управление» и «Бухгалтерский учёт» места сложены по двум факультетам, проходной балл общий.</li>
+      <li>БНТУ: места по профилям «Инженерной экономики» - места в общем конкурсе 2026 года (без целевых). У «Экономики и управления» БНТУ по плану 48 бюджетных и 135 платных мест, в общем конкурсе на бюджет было 2.</li>
+      <li>Баллы 2026 года по БГАТУ, Академии управления, БГАС, МИТСО и МИУП ещё не опубликованы, для них показан 2025 год.</li>
+      <li>До 2023 года действовал старый перечень специальностей. Баллы 2021-2022 показаны только там, где специальность явно та же; за 2022 год нет данных по БГЭУ и БГУ.</li>
+      <li>МИТСО и МИУП - частные вузы, только платное обучение.</li>
+      <li>Цена - за 1 год по данным вуза на указанную дату. У БГЭУ и БНТУ цена, вероятно, ещё за 2025/26 учебный год. Для Института бизнеса БГУ цену смотрите на сайте института.</li>
+      <li>«Мой балл» сравнивается с последним проходным баллом. Это ориентир: проходной балл каждый год меняется на 10-30 баллов.</li>
+    </ul>
+    <h2>Источники</h2>
+    <ul class="small">
+      <li><a href="https://abiturient.by/universities" target="_blank" rel="noopener">abiturient.by</a> - сайт Минобразования: план приёма 2026, предметы, стоимость, проходные баллы 2021-2026</li>
+      <li><a href="https://bseu.by/russian/abiturient/plan1.htm" target="_blank" rel="noopener">БГЭУ: бюджет</a> и <a href="https://bseu.by/russian/abiturient/plan3.htm" target="_blank" rel="noopener">платно</a> - конкурс и баллы 2024-2026</li>
+      <li><a href="https://priem.bntu.by/ru/pk/enrollmentbal/do/" target="_blank" rel="noopener">БНТУ: бюджет 2026</a> и <a href="https://priem.bntu.by/ru/pk/enrollmentbal/DOplat/" target="_blank" rel="noopener">платно 2026</a></li>
+      <li><a href="https://kudapostupat.by/article/item/id/3199" target="_blank" rel="noopener">kudapostupat.by</a> - баллы БГУ 2026</li>
+    </ul>
+  </section>
+  <footer>Собрано 28.10.2026 по открытым данным вузов и Министерства образования. Перед подачей документов сверяйте цифры с сайтом приёмной комиссии.</footer>
+</div>
+
+<script id="data" type="application/json">[{"id": "БГУ · Международная экономика и торговля (с китайским языком)", "group": "Экономика", "uni": "БГУ", "uni_type": "гос.", "name": "Международная экономика и торговля (с китайским языком)", "faculty": "Экономический факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 20, "places_paid": 10, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": null, "p2023": null, "b2024": null, "p2024": null, "b2025": 397, "p2025": 371, "b2026": 395, "p2026": 382, "b_change": -2, "p_change": 11, "price": 6554, "price_date": "11.07.2026", "source_2026": "kudapostupat.by", "b_last": 395, "b_last_year": 2026, "p_last": 382, "p_last_year": 2026}, {"id": "БГУ · Мировая экономика (факультет международных отношений)", "group": "Экономика", "uni": "БГУ", "uni_type": "гос.", "name": "Мировая экономика (факультет международных отношений)", "faculty": "Факультет международных отношений", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 15, "places_paid": 30, "contest_budget": null, "contest_paid": null, "b2021": 359, "p2021": null, "b2022": null, "p2022": null, "b2023": 385, "p2023": 295, "b2024": 395, "p2024": 310, "b2025": 398, "p2025": 348, "b2026": 393, "p2026": 352, "b_change": -5, "p_change": 4, "price": 6554, "price_date": "11.07.2026", "source_2026": "kudapostupat.by", "b_last": 393, "b_last_year": 2026, "p_last": 352, "p_last_year": 2026}, {"id": "БГУ · Экономика", "group": "Экономика", "uni": "БГУ", "uni_type": "гос.", "name": "Экономика", "faculty": "Экономический факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 10, "places_paid": 30, "contest_budget": null, "contest_paid": null, "b2021": 341, "p2021": null, "b2022": null, "p2022": null, "b2023": 379, "p2023": 256, "b2024": 381, "p2024": 276, "b2025": 387, "p2025": 314, "b2026": 381, "p2026": 263, "b_change": -6, "p_change": -51, "price": 6554, "price_date": "11.07.2026", "source_2026": "kudapostupat.by", "b_last": 381, "b_last_year": 2026, "p_last": 263, "p_last_year": 2026}, {"id": "БГЭУ · Мировая экономика", "group": "Экономика", "uni": "БГЭУ", "uni_type": "гос.", "name": "Мировая экономика", "faculty": "Факультет международных экономических отношений", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 35, "places_paid": 70, "contest_budget": 1.3, "contest_paid": 1.1, "b2021": 348, "p2021": 239, "b2022": null, "p2022": null, "b2023": 364, "p2023": 282, "b2024": 351, "p2024": 276, "b2025": 370, "p2025": 302, "b2026": 366, "p2026": 249, "b_change": -4, "p_change": -53, "price": 3641, "price_date": "03.02.2026", "source_2026": "bseu.by", "b_last": 366, "b_last_year": 2026, "p_last": 249, "p_last_year": 2026}, {"id": "БНТУ · Экономика и управление (на предприятии промышленности)", "group": "Экономика", "uni": "БНТУ", "uni_type": "гос.", "name": "Экономика и управление (на предприятии промышленности)", "faculty": "Факультет маркетинга, менеджмента, предпринимательства", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 2, "places_paid": null, "contest_budget": null, "contest_paid": null, "b2021": 330, "p2021": 219, "b2022": 326, "p2022": null, "b2023": 351, "p2023": 258, "b2024": 345, "p2024": 255, "b2025": 363, "p2025": 301, "b2026": 352, "p2026": null, "b_change": -11, "p_change": null, "price": 3277, "price_date": "10.09.2025", "source_2026": "priem.bntu.by", "b_last": 352, "b_last_year": 2026, "p_last": 301, "p_last_year": 2025}, {"id": "БГЭУ · Экономика", "group": "Экономика", "uni": "БГЭУ", "uni_type": "гос.", "name": "Экономика", "faculty": "Факультет международных экономических отношений", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 25, "places_paid": 15, "contest_budget": 1.8, "contest_paid": 1.4, "b2021": 328, "p2021": 232, "b2022": null, "p2022": null, "b2023": 355, "p2023": 266, "b2024": 345, "p2024": 268, "b2025": 358, "p2025": 291, "b2026": 340, "p2026": 289, "b_change": -18, "p_change": -2, "price": 3641, "price_date": "03.02.2026", "source_2026": "bseu.by", "b_last": 340, "b_last_year": 2026, "p_last": 289, "p_last_year": 2026}, {"id": "БГЭУ · Экономика и управление", "group": "Экономика", "uni": "БГЭУ", "uni_type": "гос.", "name": "Экономика и управление", "faculty": "Факультет коммерции и туристической индустрии; Факультет экономики и менеджмента", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 87, "places_paid": 138, "contest_budget": 1.6, "contest_paid": 1.2, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": 331, "p2023": null, "b2024": 323, "p2024": 248, "b2025": 341, "p2025": 283, "b2026": 326, "p2026": 290, "b_change": -15, "p_change": 7, "price": 3641, "price_date": "03.02.2026", "source_2026": "bseu.by", "b_last": 326, "b_last_year": 2026, "p_last": 290, "p_last_year": 2026}, {"id": "БГЭУ · Национальная экономика", "group": "Экономика", "uni": "БГЭУ", "uni_type": "гос.", "name": "Национальная экономика", "faculty": "Факультет экономики и менеджмента", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 15, "places_paid": 5, "contest_budget": 2, "contest_paid": 1.6, "b2021": 283, "p2021": null, "b2022": null, "p2022": null, "b2023": 334, "p2023": 215, "b2024": 319, "p2024": 243, "b2025": 335, "p2025": 268, "b2026": 324, "p2026": 276, "b_change": -11, "p_change": 8, "price": 3641, "price_date": "03.02.2026", "source_2026": "bseu.by", "b_last": 324, "b_last_year": 2026, "p_last": 276, "p_last_year": 2026}, {"id": "БГТУ · Экономика и управление", "group": "Экономика", "uni": "БГТУ", "uni_type": "гос.", "name": "Экономика и управление", "faculty": "Инженерно-экономический факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 22, "places_paid": 38, "contest_budget": null, "contest_paid": null, "b2021": 293, "p2021": 165, "b2022": 300, "p2022": 220, "b2023": 316, "p2023": 225, "b2024": 296, "p2024": 226, "b2025": 319, "p2025": 266, "b2026": 314, "p2026": 281, "b_change": -5, "p_change": 15, "price": 5036, "price_date": "23.09.2026", "source_2026": "abiturient.by", "b_last": 314, "b_last_year": 2026, "p_last": 281, "p_last_year": 2026}, {"id": "БГАТУ · Агробизнес", "group": "Экономика", "uni": "БГАТУ", "uni_type": "гос.", "name": "Агробизнес", "faculty": "Факультет предпринимательства и управления", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 20, "places_paid": 2, "contest_budget": null, "contest_paid": null, "b2021": 225, "p2021": 134, "b2022": null, "p2022": null, "b2023": 213, "p2023": 164, "b2024": 204, "p2024": null, "b2025": 215, "p2025": 222, "b2026": null, "p2026": null, "b_change": null, "p_change": null, "price": 3506, "price_date": "23.04.2025", "source_2026": null, "b_last": 215, "b_last_year": 2025, "p_last": 222, "p_last_year": 2025}, {"id": "БГУ · Мировая экономика (Совместный институт БГУ и ДПУ)", "group": "Экономика", "uni": "БГУ", "uni_type": "гос.", "name": "Мировая экономика (Совместный институт БГУ и ДПУ)", "faculty": "Совместный институт БГУ и Даляньского политехнического университета", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": null, "places_paid": 20, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": null, "p2023": 301, "b2024": null, "p2024": 334, "b2025": null, "p2025": 353, "b2026": null, "p2026": 358, "b_change": null, "p_change": 5, "price": 6554, "price_date": "11.07.2026", "source_2026": "kudapostupat.by", "b_last": null, "b_last_year": null, "p_last": 358, "p_last_year": 2026}, {"id": "БГУ · Экономическая информатика", "group": "Экономика + IT", "uni": "БГУ", "uni_type": "гос.", "name": "Экономическая информатика", "faculty": "Экономический факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 17, "places_paid": 39, "contest_budget": null, "contest_paid": null, "b2021": 364, "p2021": null, "b2022": null, "p2022": null, "b2023": 391, "p2023": 330, "b2024": 394, "p2024": 322, "b2025": 393, "p2025": 354, "b2026": 394, "p2026": 341, "b_change": 1, "p_change": -13, "price": 6554, "price_date": "11.07.2026", "source_2026": "kudapostupat.by", "b_last": 394, "b_last_year": 2026, "p_last": 341, "p_last_year": 2026}, {"id": "БГУИР · Электронная экономика", "group": "Экономика + IT", "uni": "БГУИР", "uni_type": "гос.", "name": "Электронная экономика", "faculty": "Инженерно-экономический факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 30, "places_paid": 90, "contest_budget": null, "contest_paid": null, "b2021": 357, "p2021": 269, "b2022": 364, "p2022": 299, "b2023": 393, "p2023": 377, "b2024": 393, "p2024": 313, "b2025": 394, "p2025": 328, "b2026": 380, "p2026": 332, "b_change": -14, "p_change": 4, "price": 5250, "price_date": "23.06.2026", "source_2026": "abiturient.by", "b_last": 380, "b_last_year": 2026, "p_last": 332, "p_last_year": 2026}, {"id": "БГЭУ · Экономическая информатика", "group": "Экономика + IT", "uni": "БГЭУ", "uni_type": "гос.", "name": "Экономическая информатика", "faculty": "Факультет цифровой экономики", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 25, "places_paid": 60, "contest_budget": 1.6, "contest_paid": 1.1, "b2021": 336, "p2021": 279, "b2022": null, "p2022": null, "b2023": 372, "p2023": 322, "b2024": 371, "p2024": 297, "b2025": 377, "p2025": 255, "b2026": 369, "p2026": 312, "b_change": -8, "p_change": 57, "price": 3641, "price_date": "03.02.2026", "source_2026": "bseu.by", "b_last": 369, "b_last_year": 2026, "p_last": 312, "p_last_year": 2026}, {"id": "БГУ · Экономическая безопасность", "group": "Финансы и учёт", "uni": "БГУ", "uni_type": "гос.", "name": "Экономическая безопасность", "faculty": "Экономический факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 30, "places_paid": 10, "contest_budget": null, "contest_paid": null, "b2021": 324, "p2021": null, "b2022": null, "p2022": null, "b2023": 378, "p2023": 324, "b2024": 383, "p2024": 321, "b2025": 388, "p2025": 334, "b2026": 373, "p2026": 334, "b_change": -15, "p_change": 0, "price": 6554, "price_date": "11.07.2026", "source_2026": "kudapostupat.by", "b_last": 373, "b_last_year": 2026, "p_last": 334, "p_last_year": 2026}, {"id": "БГУ · Финансы и кредит", "group": "Финансы и учёт", "uni": "БГУ", "uni_type": "гос.", "name": "Финансы и кредит", "faculty": "Экономический факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 10, "places_paid": 10, "contest_budget": null, "contest_paid": null, "b2021": 350, "p2021": null, "b2022": null, "p2022": null, "b2023": 368, "p2023": 261, "b2024": 377, "p2024": 288, "b2025": 382, "p2025": 314, "b2026": 372, "p2026": 267, "b_change": -10, "p_change": -47, "price": 6554, "price_date": "11.07.2026", "source_2026": "kudapostupat.by", "b_last": 372, "b_last_year": 2026, "p_last": 267, "p_last_year": 2026}, {"id": "БГУ · Государственный аудит", "group": "Финансы и учёт", "uni": "БГУ", "uni_type": "гос.", "name": "Государственный аудит", "faculty": "Экономический факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 24, "places_paid": null, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": 368, "p2023": null, "b2024": 372, "p2024": null, "b2025": 382, "p2025": null, "b2026": 356, "p2026": null, "b_change": -26, "p_change": null, "price": null, "price_date": null, "source_2026": "kudapostupat.by", "b_last": 356, "b_last_year": 2026, "p_last": null, "p_last_year": null}, {"id": "БГЭУ · Финансы и кредит", "group": "Финансы и учёт", "uni": "БГЭУ", "uni_type": "гос.", "name": "Финансы и кредит", "faculty": "Факультет финансов и банковского дела", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 157, "places_paid": 127, "contest_budget": 1.3, "contest_paid": 1.3, "b2021": 293, "p2021": 217, "b2022": null, "p2022": null, "b2023": 321, "p2023": 245, "b2024": 313, "p2024": 246, "b2025": 324, "p2025": 274, "b2026": 325, "p2026": 288, "b_change": 1, "p_change": 14, "price": 3641, "price_date": "03.02.2026", "source_2026": "bseu.by", "b_last": 325, "b_last_year": 2026, "p_last": 288, "p_last_year": 2026}, {"id": "БГЭУ · Статистика", "group": "Финансы и учёт", "uni": "БГЭУ", "uni_type": "гос.", "name": "Статистика", "faculty": "Факультет цифровой экономики", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 25, "places_paid": null, "contest_budget": 1.4, "contest_paid": null, "b2021": 303, "p2021": null, "b2022": null, "p2022": null, "b2023": 300, "p2023": 300, "b2024": 308, "p2024": null, "b2025": 315, "p2025": null, "b2026": 324, "p2026": null, "b_change": 9, "p_change": null, "price": null, "price_date": null, "source_2026": "bseu.by", "b_last": 324, "b_last_year": 2026, "p_last": null, "p_last_year": null}, {"id": "БГЭУ · Бухгалтерский учет, анализ и аудит", "group": "Финансы и учёт", "uni": "БГЭУ", "uni_type": "гос.", "name": "Бухгалтерский учет, анализ и аудит", "faculty": "Учетно-экономический факультет; Факультет финансов и банковского дела", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 155, "places_paid": 59, "contest_budget": 1.6, "contest_paid": 2.1, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": 300, "p2023": null, "b2024": 288, "p2024": 238, "b2025": 290, "p2025": 268, "b2026": 306, "p2026": 284, "b_change": 16, "p_change": 16, "price": 3641, "price_date": "03.02.2026", "source_2026": "bseu.by", "b_last": 306, "b_last_year": 2026, "p_last": 284, "p_last_year": 2026}, {"id": "БГУ · Менеджмент (экономический факультет)", "group": "Менеджмент", "uni": "БГУ", "uni_type": "гос.", "name": "Менеджмент (экономический факультет)", "faculty": "Экономический факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 8, "places_paid": 38, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": 388, "p2023": 283, "b2024": 389, "p2024": 296, "b2025": 391, "p2025": 325, "b2026": 386, "p2026": 317, "b_change": -5, "p_change": -8, "price": 6554, "price_date": "11.07.2026", "source_2026": "kudapostupat.by", "b_last": 386, "b_last_year": 2026, "p_last": 317, "p_last_year": 2026}, {"id": "БГУ · Менеджмент (факультет международных отношений)", "group": "Менеджмент", "uni": "БГУ", "uni_type": "гос.", "name": "Менеджмент (факультет международных отношений)", "faculty": "Факультет международных отношений", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 10, "places_paid": 25, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": 382, "p2023": 260, "b2024": 382, "p2024": 270, "b2025": 396, "p2025": 329, "b2026": 385, "p2026": 317, "b_change": -11, "p_change": -12, "price": 6554, "price_date": "11.07.2026", "source_2026": "kudapostupat.by", "b_last": 385, "b_last_year": 2026, "p_last": 317, "p_last_year": 2026}, {"id": "БГЭУ · Бизнес-администрирование", "group": "Менеджмент", "uni": "БГЭУ", "uni_type": "гос.", "name": "Бизнес-администрирование", "faculty": "Факультет международных экономических отношений", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 20, "places_paid": 30, "contest_budget": 1.7, "contest_paid": 1.2, "b2021": 348, "p2021": 267, "b2022": null, "p2022": null, "b2023": 360, "p2023": 304, "b2024": 365, "p2024": 312, "b2025": 380, "p2025": 304, "b2026": 365, "p2026": 315, "b_change": -15, "p_change": 11, "price": 3641, "price_date": "03.02.2026", "source_2026": "bseu.by", "b_last": 365, "b_last_year": 2026, "p_last": 315, "p_last_year": 2026}, {"id": "Академия управления · Управление информационными ресурсами", "group": "Менеджмент", "uni": "Академия управления", "uni_type": "гос.", "name": "Управление информационными ресурсами", "faculty": "Институт управленческих кадров", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 25, "places_paid": 25, "contest_budget": null, "contest_paid": null, "b2021": 315, "p2021": 263, "b2022": 330, "p2022": 286, "b2023": 338, "p2023": 261, "b2024": 345, "p2024": 296, "b2025": 356, "p2025": 297, "b2026": null, "p2026": null, "b_change": null, "p_change": null, "price": 4600, "price_date": "03.02.2026", "source_2026": null, "b_last": 356, "b_last_year": 2025, "p_last": 297, "p_last_year": 2025}, {"id": "Академия управления · Государственное управление и экономика", "group": "Менеджмент", "uni": "Академия управления", "uni_type": "гос.", "name": "Государственное управление и экономика", "faculty": "Институт управленческих кадров", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 25, "places_paid": 25, "contest_budget": null, "contest_paid": null, "b2021": 307, "p2021": 246, "b2022": 329, "p2022": 259, "b2023": 346, "p2023": 262, "b2024": 338, "p2024": 283, "b2025": 355, "p2025": 298, "b2026": null, "p2026": null, "b_change": null, "p_change": null, "price": 4600, "price_date": "03.02.2026", "source_2026": null, "b_last": 355, "b_last_year": 2025, "p_last": 298, "p_last_year": 2025}, {"id": "БГЭУ · Менеджмент", "group": "Менеджмент", "uni": "БГЭУ", "uni_type": "гос.", "name": "Менеджмент", "faculty": "Факультет экономики и менеджмента", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 20, "places_paid": 20, "contest_budget": 1.6, "contest_paid": 1.6, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": 355, "p2023": 270, "b2024": 342, "p2024": 289, "b2025": 360, "p2025": 301, "b2026": 346, "p2026": 272, "b_change": -14, "p_change": -29, "price": 3641, "price_date": "03.02.2026", "source_2026": "bseu.by", "b_last": 346, "b_last_year": 2026, "p_last": 272, "p_last_year": 2026}, {"id": "БГЭУ · Государственное управление и экономика", "group": "Менеджмент", "uni": "БГЭУ", "uni_type": "гос.", "name": "Государственное управление и экономика", "faculty": "Факультет экономики и менеджмента", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 10, "places_paid": 10, "contest_budget": 1.6, "contest_paid": 1.1, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": 339, "p2023": 237, "b2024": 314, "p2024": 255, "b2025": 351, "p2025": 280, "b2026": 330, "p2026": 287, "b_change": -21, "p_change": 7, "price": 3641, "price_date": "03.02.2026", "source_2026": "bseu.by", "b_last": 330, "b_last_year": 2026, "p_last": 287, "p_last_year": 2026}, {"id": "БГТУ · Менеджмент", "group": "Менеджмент", "uni": "БГТУ", "uni_type": "гос.", "name": "Менеджмент", "faculty": "Инженерно-экономический факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 20, "places_paid": 30, "contest_budget": null, "contest_paid": null, "b2021": 309, "p2021": 153, "b2022": 305, "p2022": 223, "b2023": 323, "p2023": 234, "b2024": 315, "p2024": 231, "b2025": 321, "p2025": 267, "b2026": 317, "p2026": 281, "b_change": -4, "p_change": 14, "price": 5036, "price_date": "23.09.2026", "source_2026": "abiturient.by", "b_last": 317, "b_last_year": 2026, "p_last": 281, "p_last_year": 2026}, {"id": "БГАТУ · Менеджмент", "group": "Менеджмент", "uni": "БГАТУ", "uni_type": "гос.", "name": "Менеджмент", "faculty": "Факультет предпринимательства и управления", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 10, "places_paid": 12, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": 271, "p2023": 220, "b2024": 281, "p2024": 227, "b2025": 294, "p2025": 245, "b2026": null, "p2026": null, "b_change": null, "p_change": null, "price": 3506, "price_date": "23.04.2025", "source_2026": null, "b_last": 294, "b_last_year": 2025, "p_last": 245, "p_last_year": 2025}, {"id": "БГУ · Бизнес-администрирование (Институт бизнеса)", "group": "Менеджмент", "uni": "БГУ", "uni_type": "гос.", "name": "Бизнес-администрирование (Институт бизнеса)", "faculty": "Институт бизнеса БГУ", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": null, "places_paid": 75, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": null, "p2023": 312, "b2024": null, "p2024": 318, "b2025": null, "p2025": 346, "b2026": null, "p2026": 343, "b_change": null, "p_change": -3, "price": null, "price_date": null, "source_2026": "kudapostupat.by", "b_last": null, "b_last_year": null, "p_last": 343, "p_last_year": 2026}, {"id": "БГУ · Управление информационными ресурсами (Институт бизнеса)", "group": "Менеджмент", "uni": "БГУ", "uni_type": "гос.", "name": "Управление информационными ресурсами (Институт бизнеса)", "faculty": "Институт бизнеса БГУ", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": null, "places_paid": 70, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": null, "p2023": 307, "b2024": null, "p2024": 307, "b2025": null, "p2025": 318, "b2026": null, "p2026": 334, "b_change": null, "p_change": 16, "price": null, "price_date": null, "source_2026": "kudapostupat.by", "b_last": null, "b_last_year": null, "p_last": 334, "p_last_year": 2026}, {"id": "МИТСО · Управление информационными ресурсами", "group": "Менеджмент", "uni": "МИТСО", "uni_type": "частный", "name": "Управление информационными ресурсами", "faculty": "Экономический факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": null, "places_paid": 50, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": 178, "b2022": null, "p2022": null, "b2023": null, "p2023": 220, "b2024": null, "p2024": 225, "b2025": null, "p2025": 257, "b2026": null, "p2026": null, "b_change": null, "p_change": null, "price": 5800, "price_date": "30.06.2026", "source_2026": null, "b_last": null, "b_last_year": null, "p_last": 257, "p_last_year": 2025}, {"id": "МИТСО · Менеджмент", "group": "Менеджмент", "uni": "МИТСО", "uni_type": "частный", "name": "Менеджмент", "faculty": "Экономический факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": null, "places_paid": 50, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": 116, "b2022": null, "p2022": null, "b2023": null, "p2023": 213, "b2024": null, "p2024": 233, "b2025": null, "p2025": 253, "b2026": null, "p2026": null, "b_change": null, "p_change": null, "price": 5840, "price_date": "30.06.2026", "source_2026": null, "b_last": null, "b_last_year": null, "p_last": 253, "p_last_year": 2025}, {"id": "МИУП · Бизнес-администрирование", "group": "Менеджмент", "uni": "МИУП", "uni_type": "частный", "name": "Бизнес-администрирование", "faculty": "Экономический факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": null, "places_paid": 30, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": null, "p2023": 228, "b2024": null, "p2024": 217, "b2025": null, "p2025": 244, "b2026": null, "p2026": null, "b_change": null, "p_change": null, "price": 5000, "price_date": "13.05.2026", "source_2026": null, "b_last": null, "b_last_year": null, "p_last": 244, "p_last_year": 2025}, {"id": "МИУП · Менеджмент", "group": "Менеджмент", "uni": "МИУП", "uni_type": "частный", "name": "Менеджмент", "faculty": "Экономический факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": null, "places_paid": 25, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": 143, "b2022": null, "p2022": 163, "b2023": null, "p2023": 178, "b2024": null, "p2024": 206, "b2025": null, "p2025": 242, "b2026": null, "p2026": null, "b_change": null, "p_change": null, "price": 5000, "price_date": "13.05.2026", "source_2026": null, "b_last": null, "b_last_year": null, "p_last": 242, "p_last_year": 2025}, {"id": "БГУИР · Цифровой маркетинг", "group": "Маркетинг и реклама", "uni": "БГУИР", "uni_type": "гос.", "name": "Цифровой маркетинг", "faculty": "Инженерно-экономический факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 30, "places_paid": 60, "contest_budget": null, "contest_paid": null, "b2021": 360, "p2021": 305, "b2022": 366, "p2022": 307, "b2023": null, "p2023": null, "b2024": 387, "p2024": 302, "b2025": 390, "p2025": 315, "b2026": 365, "p2026": 261, "b_change": -25, "p_change": -54, "price": 5250, "price_date": "23.06.2026", "source_2026": "abiturient.by", "b_last": 365, "b_last_year": 2026, "p_last": 261, "p_last_year": 2026}, {"id": "БНТУ · Инженерная экономика: Цифровой маркетинг на предприятии промышленности", "group": "Маркетинг и реклама", "uni": "БНТУ", "uni_type": "гос.", "name": "Инженерная экономика: Цифровой маркетинг на предприятии промышленности", "faculty": null, "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 5, "places_paid": 20, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": null, "p2023": null, "b2024": null, "p2024": null, "b2025": null, "p2025": null, "b2026": 362, "p2026": 309, "b_change": null, "p_change": null, "price": 3277, "price_date": "10.09.2025", "source_2026": "priem.bntu.by", "b_last": 362, "b_last_year": 2026, "p_last": 309, "p_last_year": 2026}, {"id": "БГЭУ · Маркетинг", "group": "Маркетинг и реклама", "uni": "БГЭУ", "uni_type": "гос.", "name": "Маркетинг", "faculty": "Факультет маркетинга и логистики", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 60, "places_paid": 75, "contest_budget": 1.4, "contest_paid": 1.1, "b2021": 315, "p2021": 271, "b2022": null, "p2022": null, "b2023": 353, "p2023": 292, "b2024": 345, "p2024": 288, "b2025": 358, "p2025": 306, "b2026": 349, "p2026": 283, "b_change": -9, "p_change": -23, "price": 3641, "price_date": "03.02.2026", "source_2026": "bseu.by", "b_last": 349, "b_last_year": 2026, "p_last": 283, "p_last_year": 2026}, {"id": "БНТУ · Инженерная экономика: Маркетинговый инжиниринг предприятий промышленности", "group": "Маркетинг и реклама", "uni": "БНТУ", "uni_type": "гос.", "name": "Инженерная экономика: Маркетинговый инжиниринг предприятий промышленности", "faculty": null, "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 5, "places_paid": 20, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": null, "p2023": null, "b2024": null, "p2024": null, "b2025": null, "p2025": null, "b2026": 342, "p2026": 296, "b_change": null, "p_change": null, "price": 3277, "price_date": "10.09.2025", "source_2026": "priem.bntu.by", "b_last": 342, "b_last_year": 2026, "p_last": 296, "p_last_year": 2026}, {"id": "БГЭУ · Рекламная деятельность", "group": "Маркетинг и реклама", "uni": "БГЭУ", "uni_type": "гос.", "name": "Рекламная деятельность", "faculty": "Факультет маркетинга и логистики", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 15, "places_paid": 29, "contest_budget": 1.9, "contest_paid": 1.2, "b2021": 325, "p2021": 264, "b2022": null, "p2022": null, "b2023": 350, "p2023": 317, "b2024": 349, "p2024": 268, "b2025": 356, "p2025": 306, "b2026": 335, "p2026": 292, "b_change": -21, "p_change": -14, "price": 3641, "price_date": "03.02.2026", "source_2026": "bseu.by", "b_last": 335, "b_last_year": 2026, "p_last": 292, "p_last_year": 2026}, {"id": "БГТУ · Маркетинг", "group": "Маркетинг и реклама", "uni": "БГТУ", "uni_type": "гос.", "name": "Маркетинг", "faculty": "Инженерно-экономический факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 17, "places_paid": 28, "contest_budget": null, "contest_paid": null, "b2021": 312, "p2021": 213, "b2022": 313, "p2022": 235, "b2023": 329, "p2023": 251, "b2024": 323, "p2024": 239, "b2025": 329, "p2025": 272, "b2026": 315, "p2026": 282, "b_change": -14, "p_change": 10, "price": 5036, "price_date": "23.09.2026", "source_2026": "abiturient.by", "b_last": 315, "b_last_year": 2026, "p_last": 282, "p_last_year": 2026}, {"id": "БГАС · Маркетинг", "group": "Маркетинг и реклама", "uni": "БГАС", "uni_type": "гос.", "name": "Маркетинг", "faculty": "Факультет инжиниринга и технологий связи", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 10, "places_paid": null, "contest_budget": null, "contest_paid": null, "b2021": 278, "p2021": 168, "b2022": 289, "p2022": 220, "b2023": 297, "p2023": 221, "b2024": 295, "p2024": 222, "b2025": 301, "p2025": 256, "b2026": null, "p2026": null, "b_change": null, "p_change": null, "price": null, "price_date": null, "source_2026": null, "b_last": 301, "b_last_year": 2025, "p_last": 256, "p_last_year": 2025}, {"id": "БГУ · Маркетинг (Институт бизнеса)", "group": "Маркетинг и реклама", "uni": "БГУ", "uni_type": "гос.", "name": "Маркетинг (Институт бизнеса)", "faculty": "Институт бизнеса БГУ", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": null, "places_paid": 70, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": null, "p2023": 295, "b2024": null, "p2024": 288, "b2025": null, "p2025": 320, "b2026": null, "p2026": 325, "b_change": null, "p_change": 5, "price": null, "price_date": null, "source_2026": "kudapostupat.by", "b_last": null, "b_last_year": null, "p_last": 325, "p_last_year": 2026}, {"id": "МИТСО · Маркетинг", "group": "Маркетинг и реклама", "uni": "МИТСО", "uni_type": "частный", "name": "Маркетинг", "faculty": "Экономический факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": null, "places_paid": 60, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": 164, "b2022": null, "p2022": null, "b2023": null, "p2023": 231, "b2024": null, "p2024": 227, "b2025": null, "p2025": 254, "b2026": null, "p2026": null, "b_change": null, "p_change": null, "price": 5840, "price_date": "30.06.2026", "source_2026": null, "b_last": null, "b_last_year": null, "p_last": 254, "p_last_year": 2025}, {"id": "БГУ · Международная логистика (факультет международных отношений)", "group": "Логистика и торговля", "uni": "БГУ", "uni_type": "гос.", "name": "Международная логистика (факультет международных отношений)", "faculty": "Факультет международных отношений", "subjects": "Русский или белорусский язык + иностранный язык + математика", "places_budget": 20, "places_paid": 35, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": null, "p2023": null, "b2024": 369, "p2024": 313, "b2025": 393, "p2025": 316, "b2026": 383, "p2026": 332, "b_change": -10, "p_change": 16, "price": 6554, "price_date": "11.07.2026", "source_2026": "kudapostupat.by", "b_last": 383, "b_last_year": 2026, "p_last": 332, "p_last_year": 2026}, {"id": "БГЭУ · Логистика", "group": "Логистика и торговля", "uni": "БГЭУ", "uni_type": "гос.", "name": "Логистика", "faculty": "Факультет маркетинга и логистики", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 25, "places_paid": 45, "contest_budget": 1.5, "contest_paid": 1.1, "b2021": 331, "p2021": 276, "b2022": null, "p2022": null, "b2023": 356, "p2023": 286, "b2024": 348, "p2024": 278, "b2025": 347, "p2025": 303, "b2026": 357, "p2026": 243, "b_change": 10, "p_change": -60, "price": 3641, "price_date": "03.02.2026", "source_2026": "bseu.by", "b_last": 357, "b_last_year": 2026, "p_last": 243, "p_last_year": 2026}, {"id": "БНТУ · Транспортная логистика", "group": "Логистика и торговля", "uni": "БНТУ", "uni_type": "гос.", "name": "Транспортная логистика", "faculty": "Автотракторный факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 31, "places_paid": 20, "contest_budget": null, "contest_paid": null, "b2021": 334, "p2021": 246, "b2022": 319, "p2022": null, "b2023": 349, "p2023": 273, "b2024": 321, "p2024": 257, "b2025": 358, "p2025": 294, "b2026": 335, "p2026": 300, "b_change": -23, "p_change": 6, "price": 3277, "price_date": "10.09.2025", "source_2026": "priem.bntu.by", "b_last": 335, "b_last_year": 2026, "p_last": 300, "p_last_year": 2026}, {"id": "БГУ · Таможенное дело (факультет международных отношений)", "group": "Логистика и торговля", "uni": "БГУ", "uni_type": "гос.", "name": "Таможенное дело (факультет международных отношений)", "faculty": "Факультет международных отношений", "subjects": "Русский или белорусский язык + иностранный язык + математика", "places_budget": 30, "places_paid": null, "contest_budget": null, "contest_paid": null, "b2021": 329, "p2021": null, "b2022": null, "p2022": null, "b2023": 373, "p2023": 272, "b2024": 350, "p2024": 284, "b2025": 377, "p2025": null, "b2026": 335, "p2026": null, "b_change": -42, "p_change": null, "price": null, "price_date": null, "source_2026": "kudapostupat.by", "b_last": 335, "b_last_year": 2026, "p_last": null, "p_last_year": null}, {"id": "БНТУ · Таможенное дело", "group": "Логистика и торговля", "uni": "БНТУ", "uni_type": "гос.", "name": "Таможенное дело", "faculty": null, "subjects": "Русский или белорусский язык + иностранный язык + математика", "places_budget": 22, "places_paid": null, "contest_budget": null, "contest_paid": null, "b2021": 331, "p2021": 257, "b2022": 343, "p2022": null, "b2023": 358, "p2023": 258, "b2024": 322, "p2024": 253, "b2025": 348, "p2025": 281, "b2026": 333, "p2026": null, "b_change": -15, "p_change": null, "price": 3277, "price_date": "10.09.2025", "source_2026": "priem.bntu.by", "b_last": 333, "b_last_year": 2026, "p_last": 281, "p_last_year": 2025}, {"id": "БГЭУ · Коммерция", "group": "Логистика и торговля", "uni": "БГЭУ", "uni_type": "гос.", "name": "Коммерция", "faculty": "Факультет коммерции и туристической индустрии", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 48, "places_paid": 52, "contest_budget": 2, "contest_paid": 1.2, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": 309, "p2023": 182, "b2024": 314, "p2024": 239, "b2025": 325, "p2025": 266, "b2026": 318, "p2026": 253, "b_change": -7, "p_change": -13, "price": 3641, "price_date": "03.02.2026", "source_2026": "bseu.by", "b_last": 318, "b_last_year": 2026, "p_last": 253, "p_last_year": 2026}, {"id": "БГЭУ · Товароведение", "group": "Логистика и торговля", "uni": "БГЭУ", "uni_type": "гос.", "name": "Товароведение", "faculty": "Факультет коммерции и туристической индустрии", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 34, "places_paid": 10, "contest_budget": 2.4, "contest_paid": 3.9, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": 289, "p2023": 242, "b2024": 273, "p2024": 233, "b2025": 276, "p2025": 268, "b2026": 296, "p2026": 281, "b_change": 20, "p_change": 13, "price": 3641, "price_date": "03.02.2026", "source_2026": "bseu.by", "b_last": 296, "b_last_year": 2026, "p_last": 281, "p_last_year": 2026}, {"id": "БГУ · Логистика (Институт бизнеса)", "group": "Логистика и торговля", "uni": "БГУ", "uni_type": "гос.", "name": "Логистика (Институт бизнеса)", "faculty": "Институт бизнеса БГУ", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": null, "places_paid": 45, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": null, "p2023": 284, "b2024": null, "p2024": 278, "b2025": null, "p2025": 312, "b2026": null, "p2026": 313, "b_change": null, "p_change": 1, "price": null, "price_date": null, "source_2026": "kudapostupat.by", "b_last": null, "b_last_year": null, "p_last": 313, "p_last_year": 2026}, {"id": "МИТСО · Логистика", "group": "Логистика и торговля", "uni": "МИТСО", "uni_type": "частный", "name": "Логистика", "faculty": "Экономический факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": null, "places_paid": 70, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": 207, "b2022": null, "p2022": null, "b2023": null, "p2023": 220, "b2024": null, "p2024": 228, "b2025": null, "p2025": 254, "b2026": null, "p2026": null, "b_change": null, "p_change": null, "price": 5840, "price_date": "30.06.2026", "source_2026": null, "b_last": null, "b_last_year": null, "p_last": 254, "p_last_year": 2025}, {"id": "БНТУ · Инженерная экономика: Организация внешнеэкономической деятельности предприятия", "group": "Инженерная экономика", "uni": "БНТУ", "uni_type": "гос.", "name": "Инженерная экономика: Организация внешнеэкономической деятельности предприятия", "faculty": null, "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 6, "places_paid": 20, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": 360, "p2023": 256, "b2024": 341, "p2024": 260, "b2025": 375, "p2025": 286, "b2026": 377, "p2026": 308, "b_change": 2, "p_change": 22, "price": 3277, "price_date": "10.09.2025", "source_2026": "priem.bntu.by", "b_last": 377, "b_last_year": 2026, "p_last": 308, "p_last_year": 2026}, {"id": "БНТУ · Инженерная экономика: Инновационные проекты на промышленном предприятии", "group": "Инженерная экономика", "uni": "БНТУ", "uni_type": "гос.", "name": "Инженерная экономика: Инновационные проекты на промышленном предприятии", "faculty": null, "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 10, "places_paid": 15, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": 363, "p2023": 279, "b2024": 342, "p2024": 279, "b2025": 346, "p2025": 287, "b2026": 362, "p2026": 296, "b_change": 16, "p_change": 9, "price": 3277, "price_date": "10.09.2025", "source_2026": "priem.bntu.by", "b_last": 362, "b_last_year": 2026, "p_last": 296, "p_last_year": 2026}, {"id": "БНТУ · Инженерная экономика: Производственный инжиниринг", "group": "Инженерная экономика", "uni": "БНТУ", "uni_type": "гос.", "name": "Инженерная экономика: Производственный инжиниринг", "faculty": null, "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 5, "places_paid": 20, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": null, "p2023": null, "b2024": null, "p2024": null, "b2025": null, "p2025": null, "b2026": 350, "p2026": 294, "b_change": null, "p_change": null, "price": 3277, "price_date": "10.09.2025", "source_2026": "priem.bntu.by", "b_last": 350, "b_last_year": 2026, "p_last": 294, "p_last_year": 2026}, {"id": "БНТУ · Инженерная экономика: Экономика и цифровые технологии на промышленном предприятии", "group": "Инженерная экономика", "uni": "БНТУ", "uni_type": "гос.", "name": "Инженерная экономика: Экономика и цифровые технологии на промышленном предприятии", "faculty": "Факультет технологий управления и гуманитаризации", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 15, "places_paid": 10, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": null, "b2022": 320, "p2022": null, "b2023": 337, "p2023": 265, "b2024": 298, "p2024": 240, "b2025": 335, "p2025": 297, "b2026": 348, "p2026": 286, "b_change": 13, "p_change": -11, "price": null, "price_date": null, "source_2026": "priem.bntu.by", "b_last": 348, "b_last_year": 2026, "p_last": 286, "p_last_year": 2026}, {"id": "БНТУ · Инженерная экономика: Управление дизайн-проектами на промышленном предприятии", "group": "Инженерная экономика", "uni": "БНТУ", "uni_type": "гос.", "name": "Инженерная экономика: Управление дизайн-проектами на промышленном предприятии", "faculty": null, "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 5, "places_paid": 20, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": 379, "p2023": 309, "b2024": 379, "p2024": 251, "b2025": 373, "p2025": 295, "b2026": 346, "p2026": 301, "b_change": -27, "p_change": 6, "price": 3277, "price_date": "10.09.2025", "source_2026": "priem.bntu.by", "b_last": 346, "b_last_year": 2026, "p_last": 301, "p_last_year": 2026}, {"id": "БНТУ · Инженерная экономика: Экономика и экономическая безопасность промышленного предприятия", "group": "Инженерная экономика", "uni": "БНТУ", "uni_type": "гос.", "name": "Инженерная экономика: Экономика и экономическая безопасность промышленного предприятия", "faculty": null, "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 15, "places_paid": 10, "contest_budget": null, "contest_paid": null, "b2021": 313, "p2021": 219, "b2022": 319, "p2022": null, "b2023": 326, "p2023": 251, "b2024": 294, "p2024": 241, "b2025": 332, "p2025": 290, "b2026": 345, "p2026": 285, "b_change": 13, "p_change": -5, "price": null, "price_date": null, "source_2026": "priem.bntu.by", "b_last": 345, "b_last_year": 2026, "p_last": 285, "p_last_year": 2026}, {"id": "БНТУ · Инженерная экономика: Электроэнергетика и теплоэнергетика", "group": "Инженерная экономика", "uni": "БНТУ", "uni_type": "гос.", "name": "Инженерная экономика: Электроэнергетика и теплоэнергетика", "faculty": "Энергетический факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 15, "places_paid": 10, "contest_budget": null, "contest_paid": null, "b2021": 287, "p2021": 199, "b2022": 313, "p2022": null, "b2023": 310, "p2023": 232, "b2024": 310, "p2024": 240, "b2025": 332, "p2025": 292, "b2026": 329, "p2026": 257, "b_change": -3, "p_change": -35, "price": 3072, "price_date": "10.09.2025", "source_2026": "priem.bntu.by", "b_last": 329, "b_last_year": 2026, "p_last": 257, "p_last_year": 2026}, {"id": "БНТУ · Инженерная экономика: Бизнес-процессы промышленных предприятий", "group": "Инженерная экономика", "uni": "БНТУ", "uni_type": "гос.", "name": "Инженерная экономика: Бизнес-процессы промышленных предприятий", "faculty": "Машиностроительный факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 20, "places_paid": 5, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": 319, "p2023": 240, "b2024": 317, "p2024": 224, "b2025": 328, "p2025": 274, "b2026": 328, "p2026": 310, "b_change": 0, "p_change": 36, "price": 3072, "price_date": "10.09.2025", "source_2026": "priem.bntu.by", "b_last": 328, "b_last_year": 2026, "p_last": 310, "p_last_year": 2026}, {"id": "БНТУ · Инженерная экономика: Цифровое производство", "group": "Инженерная экономика", "uni": "БНТУ", "uni_type": "гос.", "name": "Инженерная экономика: Цифровое производство", "faculty": null, "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 17, "places_paid": 5, "contest_budget": null, "contest_paid": null, "b2021": null, "p2021": null, "b2022": null, "p2022": null, "b2023": 310, "p2023": 245, "b2024": 292, "p2024": 266, "b2025": 320, "p2025": 288, "b2026": 326, "p2026": 280, "b_change": 6, "p_change": -8, "price": 3072, "price_date": "10.09.2025", "source_2026": "priem.bntu.by", "b_last": 326, "b_last_year": 2026, "p_last": 280, "p_last_year": 2026}, {"id": "БНТУ · Инженерная экономика: Коммунальное и водное хозяйство", "group": "Инженерная экономика", "uni": "БНТУ", "uni_type": "гос.", "name": "Инженерная экономика: Коммунальное и водное хозяйство", "faculty": "Факультет энергетического строительства", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 10, "places_paid": 10, "contest_budget": null, "contest_paid": null, "b2021": 266, "p2021": 187, "b2022": 296, "p2022": null, "b2023": 289, "p2023": 220, "b2024": 293, "p2024": 225, "b2025": 306, "p2025": 266, "b2026": 321, "p2026": 276, "b_change": 15, "p_change": 10, "price": 3277, "price_date": "10.09.2025", "source_2026": "priem.bntu.by", "b_last": 321, "b_last_year": 2026, "p_last": 276, "p_last_year": 2026}, {"id": "БНТУ · Инженерная экономика: Архитектура, строительство и экономика недвижимости", "group": "Инженерная экономика", "uni": "БНТУ", "uni_type": "гос.", "name": "Инженерная экономика: Архитектура, строительство и экономика недвижимости", "faculty": "Строительный факультет", "subjects": "Русский или белорусский язык + математика + иностранный язык", "places_budget": 15, "places_paid": 5, "contest_budget": null, "contest_paid": null, "b2021": 274, "p2021": 234, "b2022": 313, "p2022": null, "b2023": 309, "p2023": 233, "b2024": 319, "p2024": 270, "b2025": 333, "p2025": 305, "b2026": 315, "p2026": 310, "b_change": -18, "p_change": 5, "price": 3072, "price_date": "10.09.2025", "source_2026": "priem.bntu.by", "b_last": 315, "b_last_year": 2026, "p_last": 310, "p_last_year": 2026}]</script>
+<script>
+(() => {
+  const DATA = JSON.parse(document.getElementById('data').textContent);
+  const YEARS = [2021, 2022, 2023, 2024, 2025, 2026];
+  const GROUPS = ['Экономика', 'Экономика + IT', 'Финансы и учёт', 'Менеджмент', 'Маркетинг и реклама', 'Логистика и торговля', 'Инженерная экономика'];
+  const fmt = (v) => v == null ? '—' : String(v).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  const $ = (id) => document.getElementById(id);
+  const store = {
+    get(k) { try { return localStorage.getItem('ek-' + k); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem('ek-' + k, v); } catch (e) {} }
+  };
+
+  const state = { group: '', uni: '', q: '', budgetOnly: false, my: null, sortKey: 'b_last', sortDir: -1, sel: null };
+  const savedMy = parseInt(store.get('my'), 10);
+  if (savedMy > 0) { state.my = savedMy; $('my').value = savedMy; }
+  const fromHash = decodeURIComponent(location.hash.slice(1));
+  state.sel = DATA.find((r) => r.id === fromHash)?.id || DATA.find((r) => r.id === 'БГЭУ · Маркетинг')?.id || DATA[0].id;
+
+  $('nSpec').textContent = DATA.length;
+  $('nUni').textContent = new Set(DATA.map((r) => r.uni)).size;
+
+  // фильтры
+  const chips = $('groups');
+  ['', ...GROUPS].forEach((g) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.textContent = g || 'Все';
+    b.setAttribute('aria-pressed', String(g === state.group));
+    b.addEventListener('click', () => {
+      state.group = g;
+      chips.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c === b)));
+      render();
+    });
+    chips.appendChild(b);
+  });
+  [...new Set(DATA.map((r) => r.uni))].sort((a, b) => a.localeCompare(b, 'ru')).forEach((u) => $('uni').add(new Option(u, u)));
+  $('uni').addEventListener('change', (e) => { state.uni = e.target.value; render(); });
+  $('q').addEventListener('input', (e) => { state.q = e.target.value.trim().toLowerCase(); render(); });
+  $('budgetOnly').addEventListener('change', (e) => { state.budgetOnly = e.target.checked; render(); });
+  $('my').addEventListener('input', (e) => {
+    const v = parseInt(e.target.value, 10);
+    state.my = v >= 100 && v <= 400 ? v : null;
+    store.set('my', state.my || '');
+    render();
+  });
+  document.querySelectorAll('th[data-sort] button').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const key = btn.parentElement.dataset.sort;
+      state.sortDir = state.sortKey === key ? -state.sortDir : (key === 'spec' ? 1 : -1);
+      state.sortKey = key;
+      render();
+    });
+  });
+
+  // шкала баллов 200-400 для полоски в ячейке
+  const barColor = (v) => {
+    const t = Math.max(0, Math.min(1, (v - 220) / 170));
+    return `hsl(${Math.round(140 - 140 * t)} 55% 45%)`;
+  };
+  const chance = (r) => {
+    if (!state.my) return null;
+    if (r.b_last && state.my >= r.b_last) return ['ok', 'бюджет'];
+    if (r.b_last && state.my >= r.b_last - 10) return ['warn', 'бюджет на грани'];
+    if (r.p_last && state.my >= r.p_last) return ['ok', 'платно'];
+    if (r.p_last && state.my >= r.p_last - 10) return ['warn', 'платно на грани'];
+    return ['bad', 'не хватает'];
+  };
+
+  function scoreCell(td, v, year) {
+    td.className = 'r num';
+    if (v == null) { td.textContent = '—'; td.classList.add('muted'); return; }
+    const box = document.createElement('div'); box.className = 'score';
+    const t = document.createElement('span'); t.textContent = v;
+    if (year && year !== 2026) { const y = document.createElement('span'); y.className = 'yr'; y.textContent = '’' + String(year).slice(2); t.appendChild(y); }
+    const bar = document.createElement('span'); bar.className = 'bar';
+    const i = document.createElement('i'); i.style.width = Math.max(4, ((v - 150) / 250) * 100) + '%'; i.style.background = barColor(v);
+    bar.appendChild(i); box.append(t, bar); td.appendChild(box);
+  }
+  function deltaCell(td, v) {
+    td.className = 'r num hide-sm';
+    if (v == null) { td.textContent = ''; return; }
+    td.textContent = (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v);
+    if (v > 0) td.classList.add('delta-up'); else if (v < 0) td.classList.add('delta-down');
+  }
+
+  function render() {
+    const rows = DATA.filter((r) =>
+      (!state.group || r.group === state.group) &&
+      (!state.uni || r.uni === state.uni) &&
+      (!state.budgetOnly || r.places_budget) &&
+      (!state.q || (r.uni + ' ' + r.name + ' ' + r.group + ' ' + (r.faculty || '')).toLowerCase().includes(state.q)));
+    const k = state.sortKey, d = state.sortDir;
+    rows.sort((a, b) => {
+      if (k === 'spec') return d * (a.uni + a.name).localeCompare(b.uni + b.name, 'ru');
+      const av = a[k], bv = b[k];
+      if (av == null && bv == null) return 0;
+      if (av == null) return 1;
+      if (bv == null) return -1;
+      return d * (av - bv);
+    });
+    document.querySelectorAll('th[data-sort]').forEach((th) => {
+      th.setAttribute('aria-sort', th.dataset.sort === k ? (d > 0 ? 'ascending' : 'descending') : 'none');
+    });
+
+    const tb = $('rows');
+    tb.replaceChildren();
+    rows.forEach((r) => {
+      const tr = document.createElement('tr');
+      tr.dataset.id = r.id;
+      if (r.id === state.sel) tr.classList.add('sel');
+      const s = document.createElement('td'); s.className = 'spec';
+      const u = document.createElement('div'); u.className = 'uni'; u.textContent = r.uni + (r.uni_type === 'частный' ? ' (частный)' : '');
+      const n = document.createElement('div'); n.textContent = r.name;
+      const g = document.createElement('div'); g.className = 'grp'; g.textContent = r.group;
+      s.append(u, n, g);
+      const ch = chance(r);
+      if (ch) { const p = document.createElement('span'); p.className = 'pill ' + ch[0]; p.textContent = 'с ' + state.my + ': ' + ch[1]; s.appendChild(p); }
+      tr.appendChild(s);
+      const c1 = document.createElement('td'); c1.className = 'r num'; c1.textContent = fmt(r.places_budget); tr.appendChild(c1);
+      const c2 = document.createElement('td'); scoreCell(c2, r.b_last, r.b_last_year); tr.appendChild(c2);
+      const c3 = document.createElement('td'); deltaCell(c3, r.b_change); tr.appendChild(c3);
+      const c4 = document.createElement('td'); c4.className = 'r num'; c4.textContent = fmt(r.places_paid); tr.appendChild(c4);
+      const c5 = document.createElement('td'); scoreCell(c5, r.p_last, r.p_last_year); tr.appendChild(c5);
+      const c6 = document.createElement('td'); deltaCell(c6, r.p_change); tr.appendChild(c6);
+      const c7 = document.createElement('td'); c7.className = 'r num'; c7.textContent = fmt(r.price); tr.appendChild(c7);
+      tr.addEventListener('click', () => select(r.id, true));
+      tb.appendChild(tr);
+    });
+    $('empty').hidden = rows.length > 0;
+    $('countShown').textContent = 'Показано: ' + rows.length + ' из ' + DATA.length + '.';
+    renderDetail();
+  }
+
+  function select(id, fromClick) {
+    state.sel = id;
+    document.querySelectorAll('#rows tr').forEach((tr) => tr.classList.toggle('sel', tr.dataset.id === id));
+    try { history.replaceState(null, '', '#' + encodeURIComponent(id)); } catch (e) {}
+    renderDetail();
+    if (fromClick && window.matchMedia('(max-width: 960px)').matches) document.querySelector('.detail').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function renderDetail() {
+    const r = DATA.find((x) => x.id === state.sel);
+    if (!r) return;
+    $('dGroup').textContent = r.group + ' · ' + (r.uni_type === 'частный' ? 'частный вуз' : 'государственный вуз');
+    $('dTitle').textContent = r.uni + ': ' + r.name;
+    $('dFac').textContent = r.faculty || '';
+    $('dPb').textContent = fmt(r.places_budget);
+    $('dPp').textContent = fmt(r.places_paid);
+    $('dPrice').textContent = fmt(r.price);
+    $('dContest').textContent = r.contest_budget || r.contest_paid
+      ? [r.contest_budget ? 'б ' + String(r.contest_budget).replace('.', ',') : '', r.contest_paid ? 'п ' + String(r.contest_paid).replace('.', ',') : ''].filter(Boolean).join(' · ')
+      : '—';
+    const ch = chance(r);
+    const my = $('dMy');
+    my.hidden = !ch;
+    if (ch) {
+      my.replaceChildren();
+      const p = document.createElement('span'); p.className = 'pill ' + ch[0]; p.textContent = ch[1];
+      my.append('С баллом ' + state.my + ': ', p);
+    }
+    const notes = [];
+    if (r.price_date) notes.push('Цена указана на ' + r.price_date + '.');
+    if (r.source_2026) notes.push('Баллы 2026: ' + r.source_2026 + '.');
+    if (r.b_last_year === 2025 || r.p_last_year === 2025) notes.push('Баллы 2026 ещё не опубликованы.');
+    $('dNote').textContent = notes.join(' ');
+    drawChart(r);
+  }
+
+  function drawChart(r) {
+    const box = $('chart');
+    const W = Math.max(260, box.clientWidth || 340), H = 230;
+    const m = { t: 22, r: 14, b: 26, l: 36 };
+    const series = [
+      { key: 'b', color: 'var(--accent)', pts: YEARS.map((y) => [y, r['b' + y]]).filter((p) => p[1] != null), above: true },
+      { key: 'p', color: 'var(--paid)', pts: YEARS.map((y) => [y, r['p' + y]]).filter((p) => p[1] != null), above: false }
+    ];
+    const all = series.flatMap((s) => s.pts.map((p) => p[1]));
+    const ns = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', 'Проходной балл по годам');
+    const el = (tag, attrs, text) => {
+      const e = document.createElementNS(ns, tag);
+      for (const k in attrs) e.setAttribute(k, attrs[k]);
+      if (text != null) e.textContent = text;
+      svg.appendChild(e); return e;
+    };
+    if (!all.length) {
+      el('text', { x: W / 2, y: H / 2, 'text-anchor': 'middle', fill: 'var(--muted)', 'font-size': 13 }, 'Нет данных о баллах');
+      box.replaceChildren(svg); return;
+    }
+    let lo = Math.floor((Math.min(...all) - 15) / 20) * 20, hi = Math.ceil((Math.max(...all) + 15) / 20) * 20;
+    lo = Math.max(100, lo); hi = Math.min(400, hi);
+    if (hi - lo < 60) { hi = Math.min(400, lo + 60); }
+    const x = (y) => m.l + ((y - YEARS[0]) / (YEARS[YEARS.length - 1] - YEARS[0])) * (W - m.l - m.r);
+    const yv = (v) => m.t + (1 - (v - lo) / (hi - lo)) * (H - m.t - m.b);
+    const step = (hi - lo) > 120 ? 40 : 20;
+    for (let v = lo; v <= hi; v += step) {
+      el('line', { x1: m.l, x2: W - m.r, y1: yv(v), y2: yv(v), stroke: 'var(--line)', 'stroke-width': 1 });
+      el('text', { x: m.l - 6, y: yv(v) + 4, 'text-anchor': 'end', fill: 'var(--muted)', 'font-size': 11 }, v);
+    }
+    YEARS.forEach((y) => el('text', { x: x(y), y: H - 6, 'text-anchor': 'middle', fill: 'var(--muted)', 'font-size': 11 }, y));
+    series.forEach((s) => {
+      // разрывы в данных - отдельные отрезки
+      let seg = [];
+      const segs = [];
+      YEARS.forEach((y) => {
+        const v = r[s.key + y];
+        if (v == null) { if (seg.length) segs.push(seg); seg = []; } else seg.push([y, v]);
+      });
+      if (seg.length) segs.push(seg);
+      segs.forEach((sg) => {
+        if (sg.length > 1) el('polyline', { points: sg.map((p) => x(p[0]) + ',' + yv(p[1])).join(' '), fill: 'none', stroke: s.color, 'stroke-width': 2.5, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' });
+      });
+      s.pts.forEach(([y, v]) => {
+        el('circle', { cx: x(y), cy: yv(v), r: 4, fill: s.color, stroke: 'var(--panel)', 'stroke-width': 1.5 });
+        el('text', { x: x(y), y: yv(v) + (s.above ? -9 : 17), 'text-anchor': 'middle', fill: s.color, 'font-size': 11.5, 'font-weight': 700 }, v);
+      });
+    });
+    box.replaceChildren(svg);
+  }
+
+  let rt;
+  window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { const r = DATA.find((x) => x.id === state.sel); if (r) drawChart(r); }, 150); });
+  render();
+  const selRow = document.querySelector('#rows tr.sel');
+  if (fromHash && selRow) selRow.scrollIntoView({ block: 'center' });
+})();
+</script>
+</body>
+</html>
